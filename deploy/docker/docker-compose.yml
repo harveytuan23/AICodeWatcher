@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+  # 後端API服務
+  backend:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/backend.Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://codewatcher:password@postgres:5432/codewatcher
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ../../uploads:/app/uploads
+      - ../../models:/app/models
+    networks:
+      - codewatcher-network
+
+  # 前端應用
+  frontend:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/frontend.Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - codewatcher-network
+
+  # PostgreSQL數據庫
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=codewatcher
+      - POSTGRES_USER=codewatcher
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - codewatcher-network
+
+  # Redis緩存
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - codewatcher-network
+
+  # Celery工作進程
+  celery:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/backend.Dockerfile
+    command: celery -A app.core.celery worker --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql://codewatcher:password@postgres:5432/codewatcher
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ../../uploads:/app/uploads
+      - ../../models:/app/models
+    networks:
+      - codewatcher-network
+
+  # Celery監控
+  flower:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/backend.Dockerfile
+    command: celery -A app.core.celery flower --port=5555
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/1
+    depends_on:
+      - redis
+      - celery
+    networks:
+      - codewatcher-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  codewatcher-network:
+    driver: bridge 
