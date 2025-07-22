@@ -80,7 +80,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ results, loading = fals
       <Card>
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            分析中...
+            Analyzing...
           </Typography>
           <LinearProgress />
         </CardContent>
@@ -96,7 +96,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ results, loading = fals
           <Box display="flex" alignItems="center" gap={2} mb={2}>
             {getScoreIcon(score)}
             <Typography variant="h5" component="h2">
-              代碼質量評分
+              Code Quality Score
             </Typography>
           </Box>
           
@@ -105,7 +105,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ results, loading = fals
               {score}/100
             </Typography>
             <Chip 
-              label={score >= 90 ? '優秀' : score >= 70 ? '良好' : '需要改進'}
+              label={score >= 90 ? 'Excellent' : score >= 70 ? 'Good' : 'Needs Improvement'}
               color={getScoreColor(score)}
               variant="outlined"
             />
@@ -125,13 +125,13 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ results, loading = fals
         <CardContent>
           <Box display="flex" alignItems="center" gap={1} mb={2}>
             <Code />
-            <Typography variant="h6">靜態分析結果</Typography>
+            <Typography variant="h6">Static Analysis Results</Typography>
           </Box>
 
           {static_analysis.errors.length > 0 && (
             <Alert severity="error" sx={{ mb: 2 }}>
               <Typography variant="subtitle2" gutterBottom>
-                發現 {static_analysis.errors.length} 個錯誤
+                {static_analysis.errors.length} error(s) found
               </Typography>
               <List dense>
                 {static_analysis.errors.slice(0, 5).map((error, index) => (
@@ -152,7 +152,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ results, loading = fals
           {static_analysis.warnings.length > 0 && (
             <Alert severity="warning" sx={{ mb: 2 }}>
               <Typography variant="subtitle2" gutterBottom>
-                發現 {static_analysis.warnings.length} 個警告
+                {static_analysis.warnings.length} warning(s) found
               </Typography>
               <List dense>
                 {static_analysis.warnings.slice(0, 5).map((warning, index) => (
@@ -172,7 +172,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ results, loading = fals
 
           {static_analysis.errors.length === 0 && static_analysis.warnings.length === 0 && (
             <Alert severity="success">
-              沒有發現靜態分析問題
+              No static analysis issues found
             </Alert>
           )}
         </CardContent>
@@ -183,13 +183,13 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ results, loading = fals
         <CardContent>
           <Box display="flex" alignItems="center" gap={1} mb={2}>
             <Security />
-            <Typography variant="h6">安全檢查</Typography>
+            <Typography variant="h6">Security Check</Typography>
           </Box>
 
           {security.secrets.length > 0 && (
             <Alert severity="error" sx={{ mb: 2 }}>
               <Typography variant="subtitle2" gutterBottom>
-                發現 {security.secrets.length} 個潛在的安全問題
+                {security.secrets.length} potential security issue(s) found
               </Typography>
               <List dense>
                 {security.secrets.slice(0, 3).map((secret, index) => (
@@ -198,7 +198,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ results, loading = fals
                       <Security color="error" />
                     </ListItemIcon>
                     <ListItemText
-                      primary="硬編碼密鑰檢測"
+                      primary="Hardcoded secret detected"
                       secondary={`${secret.file}:${secret.line} - ${secret.pattern}`}
                     />
                   </ListItem>
@@ -209,7 +209,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ results, loading = fals
 
           {security.secrets.length === 0 && (
             <Alert severity="success">
-              未發現安全漏洞
+              No security vulnerabilities found
             </Alert>
           )}
         </CardContent>
@@ -221,7 +221,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ results, loading = fals
           <CardContent>
             <Box display="flex" alignItems="center" gap={1} mb={2}>
               <TrendingUp />
-              <Typography variant="h6">改進建議</Typography>
+              <Typography variant="h6">Suggestions for Improvement</Typography>
             </Box>
             
             <List>

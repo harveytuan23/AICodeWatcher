@@ -52,6 +52,10 @@
 - **Manual Analysis**: Support for manual repository information input for analysis
 - **History Records**: View past analysis results
 
+### Example: GitHub PR Comment by CodeWatcher
+
+![PR Comment Example](./assets/PR%20comment%20by%20CodeWatcherAI.png)
+
 ## 🏗️ Technical Architecture
 
 ### Backend Tech Stack
