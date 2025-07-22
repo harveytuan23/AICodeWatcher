@@ -255,19 +255,19 @@ class CodeAnalysisService:
         
         static = results.get("static_analysis", {})
         if static.get("errors"):
-            suggestions.append("修復靜態分析發現的錯誤以提高代碼質量")
+            suggestions.append("Fix errors found by static analysis to improve code quality.")
         
         if static.get("warnings"):
-            suggestions.append("處理代碼警告以改善代碼風格和可維護性")
+            suggestions.append("Address code warnings to improve code style and maintainability.")
         
         security = results.get("security", {})
         if security.get("secrets"):
-            suggestions.append("移除硬編碼的密鑰和密碼，使用環境變量或安全的配置管理")
+            suggestions.append("Remove hardcoded secrets and passwords. Use environment variables or secure configuration management.")
         
         if security.get("vulnerabilities"):
-            suggestions.append("修復安全漏洞以保護應用程序安全")
+            suggestions.append("Fix security vulnerabilities to protect your application.")
         
         if results.get("score", 100) < 70:
-            suggestions.append("整體代碼質量需要改進，建議進行代碼重構")
+            suggestions.append("Overall code quality needs improvement. Consider refactoring.")
         
         return suggestions 
